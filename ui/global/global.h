@@ -5,6 +5,7 @@
 
 #include "pcap.h"
 
+
 typedef QList<pcap_if_t *> device_list_t;  //定义存储设备的列表类型
 
 typedef  QList<const u_char*> raw_packet_list_t;  //定义存储原始数据包的列表类型

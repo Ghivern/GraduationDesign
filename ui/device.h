@@ -2,7 +2,7 @@
 #define DEVICES_H
 
 #include <QObject>
-#include "./global/global.h"
+#include "../global.h"
 
 class Device:public QObject
 {

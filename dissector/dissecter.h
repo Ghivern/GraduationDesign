@@ -2,7 +2,7 @@
 #define DISSECTER_H
 
 #include <QObject>
-#include "global/global.h"
+#include "../global.h"
 #include "global/global_dissect.h"
 
 class Dissecter:public QObject

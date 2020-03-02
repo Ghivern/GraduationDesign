@@ -1,7 +1,7 @@
 #ifndef DTREE_H
 #define DTREE_H
 
-#include "global/global.h"
+#include "../global.h"
 
 class DTree
 {

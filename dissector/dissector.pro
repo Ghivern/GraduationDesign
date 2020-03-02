@@ -36,17 +36,19 @@ HEADERS += \
     dissecters/dissecter_tcp.h \
     dissecters/dissecter_udp.h \
     dtree.h \
-    global/global.h \
+    ../global.h \
     global/global_dissect.h \
     global/pro_headers.h \
     loader.h
 
 LIBS += -lpcap
 
-DESTDIR = ../bin
+DESTDIR = ../lib
+
+unix:OBJECTS_DIR = ../tmp
 
 # Default rules for deployment.
-unix {
-    target.path = /usr/lib
-}
-!isEmpty(target.path): INSTALLS += target
+#unix {
+#    target.path = /usr/lib
+#}
+#!isEmpty(target.path): INSTALLS += target

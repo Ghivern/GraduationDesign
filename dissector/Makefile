@@ -37,7 +37,7 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = dissector1.0.0
-DISTDIR = /home/ghivern/QtProjects/PacketAnalysisTool/dissector/.tmp/dissector1.0.0
+DISTDIR = /home/ghivern/githubRepositorys/GraduationDesign/tmp/dissector1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-O1 -Wl,-rpath,/opt/Qt5.14.0/5.14.0/gcc_64/lib -shared -Wl,-soname,libdissector.so.1
 LIBS          = $(SUBLIBS) -lpcap /opt/Qt5.14.0/5.14.0/gcc_64/lib/libQt5Core.so -lpthread   
@@ -48,7 +48,7 @@ STRIP         = strip
 
 ####### Output directory
 
-OBJECTS_DIR   = ./
+OBJECTS_DIR   = ../tmp/
 
 ####### Files
 
@@ -62,17 +62,17 @@ SOURCES       = dissecter.cpp \
 		dtree.cpp \
 		loader.cpp moc_dissecter.cpp \
 		moc_loader.cpp
-OBJECTS       = dissecter.o \
-		dissecter_arp.o \
-		dissecter_eth.o \
-		dissecter_frame.o \
-		dissecter_ip.o \
-		dissecter_tcp.o \
-		dissecter_udp.o \
-		dtree.o \
-		loader.o \
-		moc_dissecter.o \
-		moc_loader.o
+OBJECTS       = ../tmp/dissecter.o \
+		../tmp/dissecter_arp.o \
+		../tmp/dissecter_eth.o \
+		../tmp/dissecter_frame.o \
+		../tmp/dissecter_ip.o \
+		../tmp/dissecter_tcp.o \
+		../tmp/dissecter_udp.o \
+		../tmp/dtree.o \
+		../tmp/loader.o \
+		../tmp/moc_dissecter.o \
+		../tmp/moc_loader.o
 DIST          = /opt/Qt5.14.0/5.14.0/gcc_64/mkspecs/features/spec_pre.prf \
 		/opt/Qt5.14.0/5.14.0/gcc_64/mkspecs/common/unix.conf \
 		/opt/Qt5.14.0/5.14.0/gcc_64/mkspecs/common/linux.conf \
@@ -289,7 +289,7 @@ DIST          = /opt/Qt5.14.0/5.14.0/gcc_64/mkspecs/features/spec_pre.prf \
 		dissecters/dissecter_tcp.h \
 		dissecters/dissecter_udp.h \
 		dtree.h \
-		global/global.h \
+		../global.h \
 		global/global_dissect.h \
 		global/pro_headers.h \
 		loader.h dissecter.cpp \
@@ -302,9 +302,9 @@ DIST          = /opt/Qt5.14.0/5.14.0/gcc_64/mkspecs/features/spec_pre.prf \
 		dtree.cpp \
 		loader.cpp
 QMAKE_TARGET  = dissector
-DESTDIR       = ../bin/
+DESTDIR       = ../lib/
 TARGET        = libdissector.so.1.0.0
-TARGETA       = ../bin/libdissector.a
+TARGETA       = ../lib/libdissector.a
 TARGET0       = libdissector.so
 TARGETD       = libdissector.so.1.0.0
 TARGET1       = libdissector.so.1
@@ -314,27 +314,27 @@ TARGET2       = libdissector.so.1.0
 first: all
 ####### Build rules
 
-../bin/libdissector.so.1.0.0:  $(OBJECTS) $(SUBLIBS) $(OBJCOMP)  
-	@test -d ../bin/ || mkdir -p ../bin/
+../lib/libdissector.so.1.0.0:  $(OBJECTS) $(SUBLIBS) $(OBJCOMP)  
+	@test -d ../lib/ || mkdir -p ../lib/
 	-$(DEL_FILE) $(TARGET) $(TARGET0) $(TARGET1) $(TARGET2)
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(LIBS) $(OBJCOMP)
 	-ln -s $(TARGET) $(TARGET0)
 	-ln -s $(TARGET) $(TARGET1)
 	-ln -s $(TARGET) $(TARGET2)
-	-$(DEL_FILE) ../bin/$(TARGET)
-	-$(MOVE) $(TARGET) ../bin/$(TARGET)
-	-$(DEL_FILE) ../bin/$(TARGET0)
-	-$(DEL_FILE) ../bin/$(TARGET1)
-	-$(DEL_FILE) ../bin/$(TARGET2)
-	-$(MOVE) $(TARGET0) ../bin/$(TARGET0)
-	-$(MOVE) $(TARGET1) ../bin/$(TARGET1)
-	-$(MOVE) $(TARGET2) ../bin/$(TARGET2)
+	-$(DEL_FILE) ../lib/$(TARGET)
+	-$(MOVE) $(TARGET) ../lib/$(TARGET)
+	-$(DEL_FILE) ../lib/$(TARGET0)
+	-$(DEL_FILE) ../lib/$(TARGET1)
+	-$(DEL_FILE) ../lib/$(TARGET2)
+	-$(MOVE) $(TARGET0) ../lib/$(TARGET0)
+	-$(MOVE) $(TARGET1) ../lib/$(TARGET1)
+	-$(MOVE) $(TARGET2) ../lib/$(TARGET2)
 
 
 
-staticlib: ../bin/libdissector.a
+staticlib: ../lib/libdissector.a
 
-../bin/libdissector.a:  $(OBJECTS) $(OBJCOMP) 
+../lib/libdissector.a:  $(OBJECTS) $(OBJCOMP) 
 	-$(DEL_FILE) $(TARGETA) 
 	$(AR) $(TARGETA) $(OBJECTS)
 
@@ -763,7 +763,7 @@ qmake: FORCE
 qmake_all: FORCE
 
 
-all: Makefile ../bin/libdissector.so.1.0.0
+all: Makefile ../lib/libdissector.so.1.0.0
 
 dist: distdir FORCE
 	(cd `dirname $(DISTDIR)` && $(TAR) $(DISTNAME).tar $(DISTNAME) && $(COMPRESS) $(DISTNAME).tar) && $(MOVE) `dirname $(DISTDIR)`/$(DISTNAME).tar.gz . && $(DEL_FILE) -r $(DISTDIR)
@@ -772,7 +772,7 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /opt/Qt5.14.0/5.14.0/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents dissecter.h dissecters/dissecter_arp.h dissecters/dissecter_eth.h dissecters/dissecter_frame.h dissecters/dissecter_ip.h dissecters/dissecter_tcp.h dissecters/dissecter_udp.h dtree.h global/global.h global/global_dissect.h global/pro_headers.h loader.h $(DISTDIR)/
+	$(COPY_FILE) --parents dissecter.h dissecters/dissecter_arp.h dissecters/dissecter_eth.h dissecters/dissecter_frame.h dissecters/dissecter_ip.h dissecters/dissecter_tcp.h dissecters/dissecter_udp.h dtree.h ../global.h global/global_dissect.h global/pro_headers.h loader.h $(DISTDIR)/
 	$(COPY_FILE) --parents dissecter.cpp dissecters/dissecter_arp.cpp dissecters/dissecter_eth.cpp dissecters/dissecter_frame.cpp dissecters/dissecter_ip.cpp dissecters/dissecter_tcp.cpp dissecters/dissecter_udp.cpp dtree.cpp loader.cpp $(DISTDIR)/
 
 
@@ -782,8 +782,8 @@ clean: compiler_clean
 
 
 distclean: clean 
-	-$(DEL_FILE) ../bin/$(TARGET) 
-	-$(DEL_FILE) ../bin/$(TARGET0) ../bin/$(TARGET1) ../bin/$(TARGET2) $(TARGETA)
+	-$(DEL_FILE) ../lib/$(TARGET) 
+	-$(DEL_FILE) ../lib/$(TARGET0) ../lib/$(TARGET1) ../lib/$(TARGET2) $(TARGETA)
 	-$(DEL_FILE) .qmake.stash
 	-$(DEL_FILE) Makefile
 
@@ -863,28 +863,25 @@ moc_dissecter.cpp: dissecter.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvarlengtharray.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontainerfwd.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobject_impl.h \
-		global/global.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariant.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qshareddata.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qset.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontiguouscache.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		global/global_dissect.h \
+		../global.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCore \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCoreDepends \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractanimation.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstracteventdispatcher.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qeventloop.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractitemmodel.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariant.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qshareddata.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qset.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontiguouscache.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractproxymodel.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractstate.h \
@@ -1011,12 +1008,15 @@ moc_dissecter.cpp: dissecter.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qwineventnotifier.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qxmlstream.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtcoreversion.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug \
+		global/global_dissect.h \
 		dtree.h \
 		dissecter.h \
 		global/pro_headers.h \
 		moc_predefs.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/bin/moc
-	/opt/Qt5.14.0/5.14.0/gcc_64/bin/moc $(DEFINES) --include /home/ghivern/QtProjects/PacketAnalysisTool/dissector/moc_predefs.h -I/opt/Qt5.14.0/5.14.0/gcc_64/mkspecs/linux-g++ -I/home/ghivern/QtProjects/PacketAnalysisTool/dissector -I/opt/Qt5.14.0/5.14.0/gcc_64/include -I/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include dissecter.h -o moc_dissecter.cpp
+	/opt/Qt5.14.0/5.14.0/gcc_64/bin/moc $(DEFINES) --include /home/ghivern/githubRepositorys/GraduationDesign/dissector/moc_predefs.h -I/opt/Qt5.14.0/5.14.0/gcc_64/mkspecs/linux-g++ -I/home/ghivern/githubRepositorys/GraduationDesign/dissector -I/opt/Qt5.14.0/5.14.0/gcc_64/include -I/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include dissecter.h -o moc_dissecter.cpp
 
 moc_loader.cpp: loader.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QObject \
@@ -1073,28 +1073,25 @@ moc_loader.cpp: loader.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontainerfwd.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobject_impl.h \
 		dissecter.h \
-		global/global.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariant.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qshareddata.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qset.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontiguouscache.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		global/global_dissect.h \
+		../global.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCore \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCoreDepends \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractanimation.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstracteventdispatcher.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qeventloop.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractitemmodel.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariant.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qshareddata.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qset.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontiguouscache.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractproxymodel.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractstate.h \
@@ -1221,11 +1218,14 @@ moc_loader.cpp: loader.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qwineventnotifier.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qxmlstream.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtcoreversion.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug \
+		global/global_dissect.h \
 		dtree.h \
 		global/pro_headers.h \
 		moc_predefs.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/bin/moc
-	/opt/Qt5.14.0/5.14.0/gcc_64/bin/moc $(DEFINES) --include /home/ghivern/QtProjects/PacketAnalysisTool/dissector/moc_predefs.h -I/opt/Qt5.14.0/5.14.0/gcc_64/mkspecs/linux-g++ -I/home/ghivern/QtProjects/PacketAnalysisTool/dissector -I/opt/Qt5.14.0/5.14.0/gcc_64/include -I/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include loader.h -o moc_loader.cpp
+	/opt/Qt5.14.0/5.14.0/gcc_64/bin/moc $(DEFINES) --include /home/ghivern/githubRepositorys/GraduationDesign/dissector/moc_predefs.h -I/opt/Qt5.14.0/5.14.0/gcc_64/mkspecs/linux-g++ -I/home/ghivern/githubRepositorys/GraduationDesign/dissector -I/opt/Qt5.14.0/5.14.0/gcc_64/include -I/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include loader.h -o moc_loader.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -1241,7 +1241,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 
 ####### Compile
 
-dissecter.o: dissecter.cpp dissecter.h \
+../tmp/dissecter.o: dissecter.cpp dissecter.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QObject \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobject.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobjectdefs.h \
@@ -1295,28 +1295,25 @@ dissecter.o: dissecter.cpp dissecter.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvarlengtharray.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontainerfwd.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobject_impl.h \
-		global/global.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariant.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qshareddata.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qset.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontiguouscache.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		global/global_dissect.h \
+		../global.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCore \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCoreDepends \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractanimation.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstracteventdispatcher.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qeventloop.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractitemmodel.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariant.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qshareddata.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qset.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontiguouscache.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractproxymodel.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractstate.h \
@@ -1443,11 +1440,14 @@ dissecter.o: dissecter.cpp dissecter.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qwineventnotifier.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qxmlstream.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtcoreversion.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug \
+		global/global_dissect.h \
 		dtree.h \
 		global/pro_headers.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o dissecter.o dissecter.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../tmp/dissecter.o dissecter.cpp
 
-dissecter_arp.o: dissecters/dissecter_arp.cpp dissecters/dissecter_arp.h \
+../tmp/dissecter_arp.o: dissecters/dissecter_arp.cpp dissecters/dissecter_arp.h \
 		dissecter.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QObject \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobject.h \
@@ -1502,28 +1502,25 @@ dissecter_arp.o: dissecters/dissecter_arp.cpp dissecters/dissecter_arp.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvarlengtharray.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontainerfwd.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobject_impl.h \
-		global/global.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariant.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qshareddata.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qset.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontiguouscache.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		global/global_dissect.h \
+		../global.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCore \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCoreDepends \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractanimation.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstracteventdispatcher.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qeventloop.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractitemmodel.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariant.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qshareddata.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qset.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontiguouscache.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractproxymodel.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractstate.h \
@@ -1650,11 +1647,14 @@ dissecter_arp.o: dissecters/dissecter_arp.cpp dissecters/dissecter_arp.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qwineventnotifier.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qxmlstream.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtcoreversion.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug \
+		global/global_dissect.h \
 		dtree.h \
 		global/pro_headers.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o dissecter_arp.o dissecters/dissecter_arp.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../tmp/dissecter_arp.o dissecters/dissecter_arp.cpp
 
-dissecter_eth.o: dissecters/dissecter_eth.cpp dissecters/dissecter_eth.h \
+../tmp/dissecter_eth.o: dissecters/dissecter_eth.cpp dissecters/dissecter_eth.h \
 		dissecter.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QObject \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobject.h \
@@ -1709,28 +1709,25 @@ dissecter_eth.o: dissecters/dissecter_eth.cpp dissecters/dissecter_eth.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvarlengtharray.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontainerfwd.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobject_impl.h \
-		global/global.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariant.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qshareddata.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qset.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontiguouscache.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		global/global_dissect.h \
+		../global.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCore \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCoreDepends \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractanimation.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstracteventdispatcher.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qeventloop.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractitemmodel.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariant.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qshareddata.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qset.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontiguouscache.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractproxymodel.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractstate.h \
@@ -1857,6 +1854,9 @@ dissecter_eth.o: dissecters/dissecter_eth.cpp dissecters/dissecter_eth.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qwineventnotifier.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qxmlstream.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtcoreversion.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug \
+		global/global_dissect.h \
 		dtree.h \
 		global/pro_headers.h \
 		dissecters/dissecter_frame.h \
@@ -1864,9 +1864,9 @@ dissecter_eth.o: dissecters/dissecter_eth.cpp dissecters/dissecter_eth.h \
 		dissecters/dissecter_tcp.h \
 		dissecters/dissecter_udp.h \
 		dissecters/dissecter_arp.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o dissecter_eth.o dissecters/dissecter_eth.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../tmp/dissecter_eth.o dissecters/dissecter_eth.cpp
 
-dissecter_frame.o: dissecters/dissecter_frame.cpp dissecters/dissecter_frame.h \
+../tmp/dissecter_frame.o: dissecters/dissecter_frame.cpp dissecters/dissecter_frame.h \
 		dissecter.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QObject \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobject.h \
@@ -1921,28 +1921,25 @@ dissecter_frame.o: dissecters/dissecter_frame.cpp dissecters/dissecter_frame.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvarlengtharray.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontainerfwd.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobject_impl.h \
-		global/global.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariant.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qshareddata.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qset.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontiguouscache.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		global/global_dissect.h \
+		../global.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCore \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCoreDepends \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractanimation.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstracteventdispatcher.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qeventloop.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractitemmodel.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariant.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qshareddata.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qset.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontiguouscache.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractproxymodel.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractstate.h \
@@ -2069,11 +2066,14 @@ dissecter_frame.o: dissecters/dissecter_frame.cpp dissecters/dissecter_frame.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qwineventnotifier.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qxmlstream.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtcoreversion.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug \
+		global/global_dissect.h \
 		dtree.h \
 		global/pro_headers.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o dissecter_frame.o dissecters/dissecter_frame.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../tmp/dissecter_frame.o dissecters/dissecter_frame.cpp
 
-dissecter_ip.o: dissecters/dissecter_ip.cpp dissecters/dissecter_ip.h \
+../tmp/dissecter_ip.o: dissecters/dissecter_ip.cpp dissecters/dissecter_ip.h \
 		dissecter.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QObject \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobject.h \
@@ -2128,28 +2128,25 @@ dissecter_ip.o: dissecters/dissecter_ip.cpp dissecters/dissecter_ip.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvarlengtharray.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontainerfwd.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobject_impl.h \
-		global/global.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariant.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qshareddata.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qset.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontiguouscache.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		global/global_dissect.h \
+		../global.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCore \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCoreDepends \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractanimation.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstracteventdispatcher.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qeventloop.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractitemmodel.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariant.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qshareddata.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qset.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontiguouscache.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractproxymodel.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractstate.h \
@@ -2276,13 +2273,16 @@ dissecter_ip.o: dissecters/dissecter_ip.cpp dissecters/dissecter_ip.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qwineventnotifier.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qxmlstream.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtcoreversion.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug \
+		global/global_dissect.h \
 		dtree.h \
 		global/pro_headers.h \
 		dissecters/dissecter_tcp.h \
 		dissecters/dissecter_udp.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o dissecter_ip.o dissecters/dissecter_ip.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../tmp/dissecter_ip.o dissecters/dissecter_ip.cpp
 
-dissecter_tcp.o: dissecters/dissecter_tcp.cpp dissecters/dissecter_tcp.h \
+../tmp/dissecter_tcp.o: dissecters/dissecter_tcp.cpp dissecters/dissecter_tcp.h \
 		dissecter.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QObject \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobject.h \
@@ -2337,28 +2337,25 @@ dissecter_tcp.o: dissecters/dissecter_tcp.cpp dissecters/dissecter_tcp.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvarlengtharray.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontainerfwd.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobject_impl.h \
-		global/global.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariant.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qshareddata.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qset.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontiguouscache.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		global/global_dissect.h \
+		../global.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCore \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCoreDepends \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractanimation.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstracteventdispatcher.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qeventloop.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractitemmodel.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariant.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qshareddata.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qset.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontiguouscache.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractproxymodel.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractstate.h \
@@ -2485,11 +2482,14 @@ dissecter_tcp.o: dissecters/dissecter_tcp.cpp dissecters/dissecter_tcp.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qwineventnotifier.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qxmlstream.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtcoreversion.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug \
+		global/global_dissect.h \
 		dtree.h \
 		global/pro_headers.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o dissecter_tcp.o dissecters/dissecter_tcp.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../tmp/dissecter_tcp.o dissecters/dissecter_tcp.cpp
 
-dissecter_udp.o: dissecters/dissecter_udp.cpp dissecters/dissecter_udp.h \
+../tmp/dissecter_udp.o: dissecters/dissecter_udp.cpp dissecters/dissecter_udp.h \
 		dissecter.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QObject \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobject.h \
@@ -2544,28 +2544,25 @@ dissecter_udp.o: dissecters/dissecter_udp.cpp dissecters/dissecter_udp.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvarlengtharray.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontainerfwd.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobject_impl.h \
-		global/global.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariant.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qshareddata.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qset.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontiguouscache.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		global/global_dissect.h \
+		../global.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCore \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCoreDepends \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractanimation.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstracteventdispatcher.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qeventloop.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractitemmodel.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariant.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qshareddata.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qset.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontiguouscache.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractproxymodel.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractstate.h \
@@ -2692,15 +2689,17 @@ dissecter_udp.o: dissecters/dissecter_udp.cpp dissecters/dissecter_udp.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qwineventnotifier.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qxmlstream.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtcoreversion.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug \
+		global/global_dissect.h \
 		dtree.h \
 		global/pro_headers.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o dissecter_udp.o dissecters/dissecter_udp.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../tmp/dissecter_udp.o dissecters/dissecter_udp.cpp
 
-dtree.o: dtree.cpp dtree.h \
-		global/global.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlist.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qalgorithms.h \
+../tmp/dtree.o: dtree.cpp dtree.h \
+		../global.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCore \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCoreDepends \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qglobal.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qconfig-bootstrapped.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qconfig.h \
@@ -2722,18 +2721,24 @@ dtree.o: dtree.cpp dtree.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmutex.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qnumeric.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qversiontagging.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiterator.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qrefcount.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qarraydata.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhashfunctions.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractanimation.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobject.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobjectdefs.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qnamespace.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qstring.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qchar.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qbytearray.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qnamespace.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qrefcount.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qarraydata.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qstringliteral.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qstringalgorithms.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qstringview.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qstringbuilder.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlist.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qalgorithms.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiterator.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhashfunctions.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qpair.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvector.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontainertools_impl.h \
@@ -2742,31 +2747,159 @@ dtree.o: dtree.cpp dtree.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qstringlist.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qregexp.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qstringmatcher.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobject.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobjectdefs.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcoreevent.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qscopedpointer.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmetatype.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvarlengtharray.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontainerfwd.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobject_impl.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstracteventdispatcher.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qeventloop.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractitemmodel.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariant.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qshareddata.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qset.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontiguouscache.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o dtree.o dtree.cpp
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractproxymodel.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractstate.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstracttransition.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qanimationgroup.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qarraydataops.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qarraydatapointer.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qbasictimer.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qbitarray.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qbuffer.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qbytearraymatcher.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcache.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcalendar.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcborarray.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcborvalue.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdatetime.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcborcommon.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qregularexpression.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qurl.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qurlquery.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/quuid.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcbormap.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcborstream.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qfloat16.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcollator.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcommandlineoption.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcommandlineparser.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcoreapplication.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qconcatenatetablesproxymodel.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcryptographichash.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdatastream.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdeadlinetimer.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qelapsedtimer.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdir.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qfileinfo.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qfile.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qfiledevice.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdiriterator.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qeasingcurve.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qendian.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qeventtransition.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qexception.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qfactoryinterface.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qfileselector.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QObject \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QStringList \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qfilesystemwatcher.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qfinalstate.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qfuture.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qfutureinterface.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qrunnable.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qresultstore.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qfuturesynchronizer.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qfuturewatcher.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhistorystate.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qidentityproxymodel.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qisenum.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qitemselectionmodel.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qjsonarray.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qjsonvalue.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qjsondocument.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qjsonobject.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlibrary.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlibraryinfo.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qversionnumber.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qline.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlinkedlist.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlockfile.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qloggingcategory.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmargins.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmath.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmessageauthenticationcode.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmetaobject.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmimedata.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmimedatabase.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmimetype.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobjectcleanuphandler.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qoperatingsystemversion.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qparallelanimationgroup.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qpauseanimation.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qplugin.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qpointer.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qpluginloader.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qprocess.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qpropertyanimation.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariantanimation.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qqueue.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qrandom.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qreadwritelock.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qrect.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsize.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qresource.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsavefile.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qscopedvaluerollback.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qscopeguard.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsemaphore.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsequentialanimationgroup.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsettings.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedmemory.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsignalmapper.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsignaltransition.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsocketnotifier.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsortfilterproxymodel.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qstack.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qstandardpaths.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qstate.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qstatemachine.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qstorageinfo.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qstringlistmodel.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsystemsemaphore.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtemporarydir.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtemporaryfile.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextboundaryfinder.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextcodec.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qthread.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qthreadpool.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qthreadstorage.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtimeline.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtimer.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtimezone.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtranslator.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtransposeproxymodel.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtypetraits.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qwaitcondition.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qwineventnotifier.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qxmlstream.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtcoreversion.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../tmp/dtree.o dtree.cpp
 
-loader.o: loader.cpp loader.h \
+../tmp/loader.o: loader.cpp loader.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QObject \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobject.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobjectdefs.h \
@@ -2821,28 +2954,25 @@ loader.o: loader.cpp loader.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontainerfwd.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qobject_impl.h \
 		dissecter.h \
-		global/global.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariant.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qshareddata.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qset.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontiguouscache.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer.h \
-		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		global/global_dissect.h \
+		../global.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCore \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QtCoreDepends \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractanimation.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstracteventdispatcher.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qeventloop.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractitemmodel.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qvariant.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qmap.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qdebug.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qhash.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtextstream.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qiodevice.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qlocale.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qshareddata.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qset.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qcontiguouscache.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractproxymodel.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qabstractstate.h \
@@ -2969,6 +3099,9 @@ loader.o: loader.cpp loader.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qwineventnotifier.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qxmlstream.h \
 		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/qtcoreversion.h \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QList \
+		/opt/Qt5.14.0/5.14.0/gcc_64/include/QtCore/QDebug \
+		global/global_dissect.h \
 		dtree.h \
 		global/pro_headers.h \
 		dissecters/dissecter_eth.h \
@@ -2977,35 +3110,19 @@ loader.o: loader.cpp loader.h \
 		dissecters/dissecter_tcp.h \
 		dissecters/dissecter_udp.h \
 		dissecters/dissecter_arp.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o loader.o loader.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../tmp/loader.o loader.cpp
 
-moc_dissecter.o: moc_dissecter.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_dissecter.o moc_dissecter.cpp
+../tmp/moc_dissecter.o: moc_dissecter.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../tmp/moc_dissecter.o moc_dissecter.cpp
 
-moc_loader.o: moc_loader.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_loader.o moc_loader.cpp
+../tmp/moc_loader.o: moc_loader.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../tmp/moc_loader.o moc_loader.cpp
 
 ####### Install
 
-install_target: first FORCE
-	@test -d $(INSTALL_ROOT)/usr/lib || mkdir -p $(INSTALL_ROOT)/usr/lib
-	$(QINSTALL_PROGRAM) ../bin/$(TARGET) $(INSTALL_ROOT)/usr/lib/$(TARGET)
-	-$(STRIP) --strip-unneeded $(INSTALL_ROOT)/usr/lib/$(TARGET)
-	-$(SYMLINK) $(TARGET) $(INSTALL_ROOT)/usr/lib/$(TARGET0)
-	-$(SYMLINK) $(TARGET) $(INSTALL_ROOT)/usr/lib/$(TARGET1)
-	-$(SYMLINK) $(TARGET) $(INSTALL_ROOT)/usr/lib/$(TARGET2)
+install:  FORCE
 
-uninstall_target: FORCE
-	-$(DEL_FILE) $(INSTALL_ROOT)/usr/lib/$(TARGET) 
-	 -$(DEL_FILE) $(INSTALL_ROOT)/usr/lib/$(TARGET0) 
-	 -$(DEL_FILE) $(INSTALL_ROOT)/usr/lib/$(TARGET1) 
-	 -$(DEL_FILE) $(INSTALL_ROOT)/usr/lib/$(TARGET2)
-	-$(DEL_DIR) $(INSTALL_ROOT)/usr/lib/ 
-
-
-install: install_target  FORCE
-
-uninstall: uninstall_target  FORCE
+uninstall:  FORCE
 
 FORCE:
 

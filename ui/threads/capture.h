@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QThread>
 #include <QMutex>
-#include "../global/global.h"
+#include "../../global.h"
 #include "../caphandle.h"
 #include "../device.h"
 

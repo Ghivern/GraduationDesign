@@ -26,7 +26,7 @@ SOURCES += \
 HEADERS += \
     caphandle.h \
     device.h \
-    global/global.h \
+    ../global.h \
     global/global_ui.h \
     mainwindow.h \
     threads/capture.h \
@@ -39,10 +39,12 @@ LIBS += -lpcap
 
 INCLUDEPATH += ../dissector
 DEPENDPATH += ../dissector
-LIBS += -L ../bin/ -ldissector
+LIBS += -L ../lib -ldissector
 
 TARGET = run
 DESTDIR = ../bin
+
+unix:OBJECTS_DIR = ../tmp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

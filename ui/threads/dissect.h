@@ -5,7 +5,7 @@
 #include <QThread>
 #include <QMutex>
 #include "capture.h"
-#include "../global/global.h"
+#include "../../global.h"
 #include "loader.h"
 
 class Dissect:public QThread

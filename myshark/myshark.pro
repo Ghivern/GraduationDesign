@@ -18,8 +18,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     caphandle.cpp \
     device.cpp \
-    main.cpp \
-    mainwindow.cpp \
+    #main.cpp \
+    #mainwindow.cpp \
     threads/capture.cpp \
     threads/dissect.cpp
 
@@ -28,12 +28,21 @@ HEADERS += \
     device.h \
     ../global.h \
     global/global_ui.h \
-    mainwindow.h \
+    #mainwindow.h \
     threads/capture.h \
     threads/dissect.h
 
+#ui
+SOURCES += \
+    ui/main.cpp \
+    ui/mainwindow.cpp
+
+HEADERS += \
+    ui/mainwindow.h
+    ui/ui_mainwindow.h
+
 FORMS += \
-    mainwindow.ui
+    ui/mainwindow.ui
 
 LIBS += -lpcap
 
@@ -41,7 +50,7 @@ INCLUDEPATH += ../dissector
 DEPENDPATH += ../dissector
 LIBS += -L ../lib -ldissector
 
-TARGET = run
+TARGET = myshark
 DESTDIR = ../bin
 
 unix:OBJECTS_DIR = ../tmp

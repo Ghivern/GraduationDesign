@@ -2,8 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "./threads/capture.h"
-#include "./threads/dissect.h"
+#include "../threads/capture.h"
+#include "../threads/dissect.h"
 
 #include <QPushButton>
 

@@ -23,6 +23,10 @@ tree_node_t* Dissecter_eth::dissect(const u_char *packet, const pcap_pkthdr *pkt
     }else{// 简单解析    NO,Time,Length(Frame)     ,Src,Dst,(IP/MAC)     Protocol,Info(顶层协议)  protocolStack,headersLen(每曾均处理)
         dissect_result_list->back()->HeadersLen += sizeof (eth_hdr);
         dissect_result_list->back()->protocolStack.append("ethertype");
+        dissect_result_list->back()->Source = this->ether_msg_address(ethernet,SD::SRC,"");
+        dissect_result_list->back()->Destination = this->ether_msg_address(ethernet,SD::DST,"");
+        dissect_result_list->back()->MacSource = this->ether_msg_address(ethernet,SD::SRC,"");
+	dissect_result_list->back()->MacDestination = this->ether_msg_address(ethernet,SD::DST,"");
     }
 
     //进入下层协议
@@ -32,19 +36,19 @@ tree_node_t* Dissecter_eth::dissect(const u_char *packet, const pcap_pkthdr *pkt
             break;
         case (ushort)0x0806 :  //ARP
             {
-                dissect_result_list->back()->Source = this->ether_msg_address(ethernet,SD::SRC,"");
-                dissect_result_list->back()->Destination = this->ether_msg_address(ethernet,SD::DST,"");
+                dissect_result_list->back()->Source.append(this->ether_msg_address(ethernet,SD::SRC,""));
+                dissect_result_list->back()->Destination.append(this->ether_msg_address(ethernet,SD::DST,""));
                 Dissecter_arp::dissect_arp(this->ether_get_arp_header(ethernet),dissect_result_list,tree,info);
             }
             break;
          default:  //IPv6 ...
             {
-                dissect_result_list->back()->Source = this->ether_msg_address(ethernet,SD::SRC,"");
-                dissect_result_list->back()->Destination = this->ether_msg_address(ethernet,SD::DST,"");
+                dissect_result_list->back()->Source.append(this->ether_msg_address(ethernet,SD::SRC,""));
+                dissect_result_list->back()->Destination.append(this->ether_msg_address(ethernet,SD::DST,""));
                 ushort ethtype = this->ether_get_type(ethernet);
-                dissect_result_list->back()->Protocol = this->ether_get_type_name(ethernet);
+                dissect_result_list->back()->Protocol.append(this->ether_get_type_name(ethernet));
                 dissect_result_list->back()->Info.append(QString::asprintf("有待添加解析器，协议号为0x%02x%02x",(&ethtype)[1],(&ethtype)[0]));
-            }
+             }
             break;
     }
     return treeheader;

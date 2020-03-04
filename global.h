@@ -13,18 +13,20 @@ typedef  QList<const pcap_pkthdr*> packet_pkthdr_list_t; //定义存储数据包
 
 typedef QList<QString> protocols_t;
 typedef struct dissect_result_t{  //包简单解析结果
-    qint64 No;  // ++
-    QString Source;
-    QString Destination;
-    qint16 Length;
-    QString Protocol;
-    QString Info;
-    timeval DisplayTime;  // ++
-    float TimeSinceFirstFrame; //++
-    qint32 HeadersLen;
-    protocols_t protocolStack;
-    qint32 srcPort = -1;
-    qint32 dstPort = -1;
+  qint64 No;  // index of packet in raw packet list and pkthdr list ,ui No is based on this field
+  QString Source;  // ip source address
+  QString Destination;  // ip destination address
+  QString MacSource;  //  mac source address
+  QString MacDestination; // mac destination 
+  qint16 Length;  // packet caplen
+  QString Protocol; // top level protocol name
+  QString Info; //  a small message for displaying on ui
+  timeval DisplayTime;  //record display time , this field is filled after dissect result displayed on ui
+  float TimeSinceFirstFrame; // time since first frame
+  qint32 HeadersLen; // protocol headers len (without payload data)
+  protocols_t protocolStack; //record protocol stack
+  qint32 srcPort = -1; //record source port
+  qint32 dstPort = -1; // record destination port 
 }dissect_result_t;  //source,destination,protocol,info由上层协议添加
 typedef QList<dissect_result_t*> dissect_result_list_t;  //定义存储简单解析结果的列表类型
 

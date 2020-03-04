@@ -15,6 +15,23 @@ void Dissecter_udp::dissect_udp(const udp_hdr *udp//const u_char *packet
         nextF = DTree::addNext(nextF,udp_msg_check_sum(udp),udp_p_check_sum_start(),udp_p_check_sum_end());   //  - -添加 Checksum
         nextF = DTree::addNext(nextF,udp_msg_check_sum_status(udp));    // - - 添加 Checksum status
 
+        //添加Stream Index
+        QString msg = "[ Stream Index :";
+        QString key1 = dissect_result_list->at(info->No)->Source
+                + QString::asprintf("%u",udp_get_src_port(udp))
+                + dissect_result_list->at(info->No)->Destination
+                + QString::asprintf("%u",udp_get_dst_port(udp));
+        QString key2 = dissect_result_list->at(info->No)->Destination
+                + QString::asprintf("%u",udp_get_dst_port(udp))
+                + dissect_result_list->at(info->No)->Source
+                + QString::asprintf("%u",udp_get_src_port(udp));
+        if(Dissecter_udp::streamIndex.contains(key1))
+            msg.append( QString::asprintf("%lld ]",Dissecter_udp::streamIndex.value(key1)) );
+        else if(Dissecter_udp::streamIndex.contains(key2))
+            msg.append( QString::asprintf("%lld ]",Dissecter_udp::streamIndex.value(key2)) );
+        else
+            msg.append( QString::asprintf("x ]"));
+        nextF = DTree::addNext(nextF,msg);
     }else{// 简单解析 NO,Time,Length(Frame)     ,Src,Dst,(IP/MAC)     Protocol,Info(顶层协议)  protocolStack,headersLen(每曾均处理)
         dissect_result_list->back()->srcPort = udp_get_src_port(udp);
         dissect_result_list->back()->dstPort = udp_get_dst_port(udp);
@@ -23,6 +40,24 @@ void Dissecter_udp::dissect_udp(const udp_hdr *udp//const u_char *packet
         QString info = QString::asprintf("%d --> %d",ntohs(udp->sport),ntohs(udp->dport));
         dissect_result_list->back()->Info.append(info);
         dissect_result_list->back()->Protocol.append("UDP");
+
+        //处理Stream Index
+        QString key1 = dissect_result_list->back()->Source
+                + QString::asprintf("%u",udp_get_src_port(udp))
+                + dissect_result_list->back()->Destination
+                + QString::asprintf("%u",udp_get_dst_port(udp));
+        QString key2 = dissect_result_list->back()->Destination
+                + QString::asprintf("%u",udp_get_dst_port(udp))
+                + dissect_result_list->back()->Source
+                + QString::asprintf("%u",udp_get_src_port(udp));
+        if(Dissecter_udp::streamIndex.contains(key1)){
+                ;
+        }else if(Dissecter_udp::streamIndex.contains(key2)){
+                ;
+        }else{
+            Dissecter_udp::streamIndex.insert(key1, Dissecter_udp::streamIndex.keys().length());
+        }
+
     }
 }
 

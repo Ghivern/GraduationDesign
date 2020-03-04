@@ -16,7 +16,9 @@ MainWindow::MainWindow(QWidget *parent)
     this->setCentralWidget(btn);
 
     connect(this->btn,SIGNAL(clicked()),this->capture,SLOT(StartCap()));
-    connect(this->btn,SIGNAL(clicked()),this->dissect,SLOT(StartDissect()));
+    //connect(this->btn,SIGNAL(clicked()),this->dissect,SLOT(StartDissect()));
+
+    connect(this->capture,SIGNAL(onePacketCaptured(qint64)),this->dissect,SLOT(DissectOnePacket(qint64)));
 
     connect(this->dissect,SIGNAL(print(dissect_result_t*)),this,SLOT(printDissectResult(dissect_result_t*)));
 }
@@ -49,7 +51,8 @@ void MainWindow::printDissectResult(dissect_result_t *res){
     //qDebug() << "进入打印方法";
     //打印简单解析结果
     qDebug() << res->No << "   " << res->TimeSinceFirstFrame << "   " << res->Source
-             << "   "  << res->Destination << "   " << res->Protocol << "   "  << res->Length  << "  " << res->Info;
+             << "   "  << res->Destination << "   " << res->Protocol << "   "
+             << res->Length  << "  " << res->Info;
     gettimeofday(&res->DisplayTime,NULL);
 
     //打印协议树

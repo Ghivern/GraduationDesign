@@ -38,6 +38,9 @@ private:
     raw_packet_list_t *raw_packet_list;
     packet_pkthdr_list_t *packet_pkthdr_list;
 
+signals:
+    void onePacketCaptured(qint64 index);
+
 public slots:
     void StartCap();
     void StopCap();

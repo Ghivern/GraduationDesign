@@ -10,7 +10,7 @@ void Dissecter_ip::dissect_ip(const ip_hdr *ip//const u_char *packet
         QString msg;
         tree =  DTree::addNext(tree,ip_msg_top_level(ip),ip_p_top_level_start(),ip_p_top_level_end());  // -  增加IP顶层
 
-        tree_node_t* nextF = DTree::addNextFloor(tree,ip_msg_version(ip),ip_p_version_and_header_len_start(),ip_p_version_and_header_len_end());   // - -  增加Version
+        tree_node_t* nextF = DTree::addNextFloor(tree,ip_msg_version(ip),ip_p_version_and_header_len_start(),ip_p_version_and_header_len_end());  // - -  增加Version
         nextF = DTree::addNext(nextF,ip_msg_header_length(ip),ip_p_version_and_header_len_start(),ip_p_version_and_header_len_end());  // - -  增加Header Len
         nextF = DTree::addNext(nextF,ip_msg_DS(ip),ip_p_tos_start(),ip_p_tos_end());  // - - 增加 DS Field
         tree_node_t *nextFF = DTree::addNextFloor(nextF,ip_msg_DSCP(ip),ip_p_tos_start(),ip_p_tos_end());  // - - -增加 DSCP
@@ -32,7 +32,9 @@ void Dissecter_ip::dissect_ip(const ip_hdr *ip//const u_char *packet
     }else{ // 简单解析 NO,Time,Length(Frame)     ,Src,Dst,(IP/MAC)     Protocol,Info(顶层协议)  protocolStack,headersLen(每曾均处理)
         dissect_result_list->back()->HeadersLen += sizeof (ip_hdr);
         dissect_result_list->back()->protocolStack.append("IP");
+	dissect_result_list->back()->Source.clear();
         dissect_result_list->back()->Source.append( ip_get_address(ip,SD::SRC));
+	dissect_result_list->back()->Destination.clear();
         dissect_result_list->back()->Destination.append(ip_get_address(ip,SD::DST));
     }
 
@@ -64,11 +66,11 @@ bool Dissecter_ip::GetValitation(){
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  get方法
 tcp_hdr* Dissecter_ip::ip_get_tcp_header(const ip_hdr *ip){
-    return (tcp_hdr*)((uchar*)ip + ip_get_header_length(ip));
+    return (tcp_hdr*)((uchar*)ip + ip_get_header_length(ip) * 4);
 }
 
 udp_hdr* Dissecter_ip::ip_get_udp_header(const ip_hdr *ip){
-    return (udp_hdr*)((uchar*)ip + ip_get_header_length(ip));
+    return (udp_hdr*)((uchar*)ip + ip_get_header_length(ip) * 4);
 }
 
 

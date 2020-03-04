@@ -28,6 +28,7 @@ private:
 
 public slots:
     void StartDissect();
+    void DissectOnePacket(qint64 No);
 
 signals:
     void onePacketDissected(dissect_result_t *DisRes);

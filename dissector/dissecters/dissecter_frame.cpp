@@ -26,7 +26,9 @@ tree_node_t* Dissecter_frame::dissect(const pcap_pkthdr *pkthdr
     else // 简单解析 NO,Time,Length(Frame)     ,Src,Dst,(IP/MAC)     Protocol,Info(顶层协议)  protocolStack,headersLen(每曾均处理)
     {
         // NO Time Length
+        qDebug() << "new dissect_result";
         dissect_result_t *dissect_result = new dissect_result_t;
+        qDebug() << "new dissect_result sucessfully";
         dissect_result->HeadersLen = 0;
         dissect_result->protocolStack.append("eth");
         dissect_result->Length = pkthdr->caplen;   //添加Length

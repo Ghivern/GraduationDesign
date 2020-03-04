@@ -12,6 +12,8 @@ Capture::Capture(qint32 devIndex)
     this->packet_pkthdr_list = new packet_pkthdr_list_t;
 
     this->mutex = new QMutex();
+
+
 }
 
 Capture::~Capture(){
@@ -56,10 +58,10 @@ QMutex* Capture::GetMutex(){
 
 //Protected Methods
 void Capture::run(){
-    qDebug() << "captureT start";
+    qDebug() << "capture: capture thread start";
     const u_char *pRawPacket;
     struct pcap_pkthdr *pPacketInfo;
-
+    qint64 No = 0;
     while(!this->canQuit){
         if( pcap_next_ex(this->capHandle->GetPcapHandle(),&pPacketInfo,&pRawPacket) == 1 ){
             struct pcap_pkthdr *packetInfo = new pcap_pkthdr;
@@ -69,12 +71,14 @@ void Capture::run(){
             this->mutex->lock();
             this->raw_packet_list->append(rawPacket);
             this->packet_pkthdr_list->append(packetInfo);
+            emit onePacketCaptured(No);
+            No++;
             this->mutex->unlock();
         }else{
-            qDebug() << "add one failed";
+            qDebug() << "capture: capture one packet failed";
         }
     }
-    qDebug() << "capture stoped";
+    qDebug() << "capture: capture thread start";
     quit();
 }
 

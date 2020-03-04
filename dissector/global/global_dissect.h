@@ -16,5 +16,4 @@ typedef enum SD:uchar{
      DST
 }SD;
 
-
 #endif // GLOBAL_DISSECT_H

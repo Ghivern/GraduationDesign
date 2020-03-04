@@ -6,6 +6,8 @@ Dissect::Dissect(Capture *captureT)
     this->dissect_result_list = new dissect_result_list_t;
     this->capture = captureT;
     this->loader = new Loader();
+
+
     qDebug() << "dissect 初始化完成";
 }
 
@@ -29,7 +31,7 @@ void Dissect::run(){
         if(this->capture->GetListRaw()->length() > index && this->capture->GetListInfo()->length()  > index)
         {
             while (!this->capture->GetMutex()->tryLock()) {
-                ;
+                sleep(100);
             }
             this->loader->GetDissecter(this->capture->GetHandle()->GetLinkType())->dissect(
                         this->capture->GetListRaw()->at(index),
@@ -63,6 +65,18 @@ void Dissect::clear(){
 void Dissect::StartDissect(){
     this->clear();
     this->start();
+}
+
+void Dissect::DissectOnePacket(qint64 No){
+  qDebug() << "dissect: have received signal(onePacketCaptured) from capture thread, begin to enter dissector";
+    this->loader->GetDissecter(this->capture->GetHandle()->GetLinkType())->dissect(
+                this->capture->GetListRaw()->at(No),
+                this->capture->GetListInfo()->at(No),
+                this->dissect_result_list
+                );
+    qDebug() << "dissect: dissect one packet finished,start emit signal";
+    emit onePacketDissected(this->dissect_result_list->at(No));
+    emit print(this->dissect_result_list->at(No));
 }
 
 

@@ -12,6 +12,7 @@ public:
                             ,info_for_detailed_dissect_t *info = NULL);
 private:
     static QHash<QString,qint64> streamIndex;
+    static QHash<QString,qint64> firstSeqs;
 
 
     static ushort tcp_get_src_port(const tcp_hdr *header);

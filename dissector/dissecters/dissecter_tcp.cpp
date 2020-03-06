@@ -1,6 +1,7 @@
 #include "dissecter_tcp.h"
 
 QHash<QString,qint64> Dissecter_tcp::streamIndex;
+QHash<QString,qint64> Dissecter_tcp::firstSeqs;
 
 void Dissecter_tcp::dissect_tcp(const tcp_hdr *tcp//const u_char *packet
                                 , dissect_result_list_t *dissect_result_list
@@ -19,6 +20,34 @@ void Dissecter_tcp::dissect_tcp(const tcp_hdr *tcp//const u_char *packet
                                       ,tcp_get_payload_len(tcp,dissect_result_list->at(info->No)->Length))
                      );
         tree =  DTree::addNext(tree,msg);
+
+        QString key1 = dissect_result_list->back()->Source
+                + QString::asprintf("%u",tcp_get_src_port(tcp))
+                + dissect_result_list->back()->Destination
+                + QString::asprintf("%u",tcp_get_dst_port(tcp));
+
+        msg = QString::asprintf("seq : %u   ,relative seq : %lld "
+                                ,tcp_get_seq(tcp)
+                                ,tcp_get_seq(tcp) - Dissecter_tcp::firstSeqs.value(key1));
+        tree = DTree::addNext(tree,msg);
+
+        QString key2 = dissect_result_list->back()->Destination
+                 + QString::asprintf("%u",tcp_get_dst_port(tcp))
+                 + dissect_result_list->back()->Source
+                 + QString::asprintf("%u",tcp_get_src_port(tcp));
+        qint64 relativeAck = tcp_get_ack(tcp);
+        if(Dissecter_tcp::firstSeqs.contains(key2)){
+            relativeAck -= Dissecter_tcp::firstSeqs.value(key2);
+        }else{
+            if( tcp_get_ack(tcp) ){
+                relativeAck = 1;
+            }
+        }
+        msg = QString::asprintf("ack : %u   ,relative ack : %lld "
+                                ,tcp_get_ack(tcp)
+                                ,relativeAck);
+        tree = DTree::addNext(tree,msg);
+
     }
     else// 简单解析 NO,Time,Length(Frame)     ,Src,Dst,(IP/MAC)     Protocol,Info(顶层协议)  protocolStack,headersLen(每曾均处理)
     {
@@ -29,6 +58,22 @@ void Dissecter_tcp::dissect_tcp(const tcp_hdr *tcp//const u_char *packet
        dissect_result_list->back()->Info.append(QString(info));
        dissect_result_list->back()->Protocol.clear();
        dissect_result_list->back()->Protocol.append(QString("TCP"));
+
+       QString key1 = dissect_result_list->back()->Source
+               + QString::asprintf("%u",tcp_get_src_port(tcp))
+               + dissect_result_list->back()->Destination
+               + QString::asprintf("%u",tcp_get_dst_port(tcp));
+       QString key2 = dissect_result_list->back()->Destination
+                + QString::asprintf("%u",tcp_get_dst_port(tcp))
+                + dissect_result_list->back()->Source
+                + QString::asprintf("%u",tcp_get_src_port(tcp));
+
+       if(!Dissecter_tcp::firstSeqs.contains(key1)){
+           if(tcp_get_SYN(tcp) == 1)
+               Dissecter_tcp::firstSeqs.insert(key1,tcp_get_seq(tcp));
+           else
+               Dissecter_tcp::firstSeqs.insert(key1,tcp_get_seq(tcp) - 1);
+       }
 
 //       //处理streamIndex计数器
 //       if(dissect_result_list->length() == 1){
